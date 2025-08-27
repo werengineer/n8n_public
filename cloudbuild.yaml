@@ -19,7 +19,7 @@ steps:
       - '--image'
       - 'gcr.io/wae-resurces/n8n:latest'
       - '--region'
-      - 'us-central1'
+      - 'europe-west1'
       - '--platform'
       - 'managed'
       - '--port'
@@ -33,19 +33,11 @@ steps:
       - '--ingress'
       - 'all'
       - '--allow-unauthenticated'
-      - '--set-env-vars'
-      - |
-        N8N_HOST=0.0.0.0,
-        N8N_PORT=8080,
-        N8N_PROTOCOL=https,
-        N8N_EDITOR_BASE_URL=https://n8n-${_SERVICE_HASH}-uc.a.run.app,
-        WEBHOOK_URL=https://n8n-${_SERVICE_HASH}-uc.a.run.app,
-        N8N_BASIC_AUTH_ACTIVE=true,
-        N8N_BASIC_AUTH_USER=admin,
-        N8N_BASIC_AUTH_PASSWORD=your-secure-password,
-        N8N_DIAGNOSTICS_ENABLED=false,
-        EXECUTIONS_PROCESS=main,
-        N8N_PUBLIC_API_DISABLED=false
+      - '--set-env-vars=^|^N8N_HOST=0.0.0.0|N8N_PORT=8080|N8N_PROTOCOL=https|N8N_EDITOR_BASE_URL=https://n8n-public-230877802260.europe-west1.run.app|WEBHOOK_URL=https://n8n-public-230877802260.europe-west1.run.app|N8N_BASIC_AUTH_ACTIVE=true|N8N_BASIC_AUTH_USER=admin|N8N_BASIC_AUTH_PASSWORD=your-secure-password|N8N_DIAGNOSTICS_ENABLED=true|EXECUTIONS_PROCESS=main|N8N_PUBLIC_API_DISABLED=false'
+      - '--health-path=/healthz'
+      - '--health-check-timeout=5s'
+      - '--health-interval=30s'
+      - '--health-retries=3'
 
 # Images created by the build
 images:
