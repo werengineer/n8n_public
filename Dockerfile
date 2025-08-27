@@ -7,6 +7,7 @@ RUN apk add --update --no-cache \
     make \
     g++ \
     tzdata \
+    nginx \
     && npm install -g n8n \
     && npm install -g npm@latest
 
@@ -26,8 +27,8 @@ ENV EXECUTIONS_PROCESS=main
 ENV N8N_DIAGNOSTICS_ENABLED=false
 ENV N8N_PUBLIC_API_DISABLED=false
 ENV N8N_BASIC_AUTH_ACTIVE=true
-ENV N8N_BASIC_AUTH_USER=admin
-ENV N8N_BASIC_AUTH_PASSWORD=your-secure-password
+ENV N8N_BASIC_AUTH_USER=info@weareengineer.com
+ENV N8N_BASIC_AUTH_PASSWORD=Wae_n8n123
 ENV N8N_PATH=/data
 ENV N8N_CONFIG_FILES=/data/config
 
@@ -44,8 +45,18 @@ EXPOSE 8080
 # Install curl for health checks
 RUN apk add --no-cache curl
 
-# Add a simple health check endpoint
-RUN echo 'const express = require("express"); const app = express(); app.get("/healthz", (req, res) => res.send("OK")); app.listen(8081);' > /health.js &
+# Configure nginx
+COPY nginx.conf /etc/nginx/nginx.conf
 
-# Start n8n with both the health check and n8n
-CMD node /health.js & n8n start
+# Add a simple health check endpoint
+RUN echo 'const express = require("express"); const app = express(); app.get("/healthz", (req, res) => res.send("OK")); app.listen(8081);' > /health.js
+
+# Start script
+COPY start.sh /start.sh
+RUN chmod +x /start.sh
+
+# Expose port for nginx
+EXPOSE 80
+
+# Start nginx and n8n
+CMD ["/start.sh"]
